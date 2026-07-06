@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "issued": "2026-07-06T00:00:00Z",
+  "canaries": ["stoch-6x6", "STOICHEION-7Q9"],
+  "assignments": [
+    { "observer": "fo-github", "source": "github_code", "cadence": "hourly" },
+    { "observer": "fo-web",    "source": "web_search",  "cadence": "daily"  }
+  ]
+}

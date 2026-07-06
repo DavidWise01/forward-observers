@@ -1,0 +1,351 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FORWARD OBSERVERS · git-c2 · a canary control center on a git repo · ROOT0</title>
+<meta name="description" content="git-c2 by David Lee Wise / ROOT0: a control center that lives on a git repo. HQ posts orders, forward observers sweep public indexes for your canary tokens, hits append to a git ledger, a page reads it back — a topographical map of where your markers surface online. The detector is network-free and self-testable — the trust boundary, verifiable live in your browser.">
+<meta name="theme-color" content="#6f7d3f">
+<meta property="og:type" content="website">
+<meta property="og:title" content="FORWARD OBSERVERS · git-c2 — map where your markers surface online">
+<meta property="og:description" content="The git repo is the comms fabric. HQ orders → observers sweep public indexes for your canaries → an append-only git ledger → a page reads it back. Detector is self-testable live.">
+<link rel="canonical" href="https://davidwise01.github.io/forward-observers/">
+<style>
+:root{
+  --paper:#efe9d8; --pan:#f6f1e2; --pan2:#f1ead6;
+  --ink:#2a2a22; --ink2:#54523f; --dim:#867f66;
+  --olive:#6f7d3f; --olive2:#4f5a2b;
+  --canary:#c99128; --canary2:#9a6d18;
+  --signal:#bf4638; --signal2:#8f3025;
+  --line:#d9cfb2; --line2:#e7dfc7;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --mono:ui-monospace,"SFMono-Regular","Cascadia Code","Consolas",monospace;
+  --shadow:0 1px 0 #fff9, 0 16px 34px -24px #2a2a2244;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;
+  background-image:repeating-linear-gradient(0deg,#0000 0 29px,#2a2a2208 29px 30px),repeating-linear-gradient(90deg,#0000 0 29px,#2a2a2208 29px 30px)}
+.wrap{max-width:1060px;margin:0 auto;padding:0 22px}
+a{color:var(--olive2);text-underline-offset:2px}
+h1,h2,h3{line-height:1.13;font-weight:600;letter-spacing:.2px}
+.mono{font-family:var(--mono)}
+
+header.top{padding:38px 0 12px}
+.sealrow{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.seal{width:110px;height:110px;flex:none;filter:drop-shadow(0 8px 18px -10px #2a2a2255)}
+.kick{font-family:var(--mono);font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--olive2)}
+h1.mh{font-size:clamp(31px,6.2vw,54px);margin:.08em 0 .12em;letter-spacing:.6px}
+.lede{font-size:18px;color:var(--ink2);max-width:62ch;margin:.35em 0 0}
+.lede b{color:var(--ink);font-weight:600}
+
+.flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;margin:22px 0 4px;border:1px solid var(--line);border-radius:13px;overflow:hidden;box-shadow:var(--shadow);background:var(--pan)}
+.fstep{flex:1 1 150px;padding:14px 15px;border-right:1px solid var(--line2);position:relative;min-width:150px}
+.fstep:last-child{border-right:0}
+.fstep .t{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--olive)}
+.fstep .n{font-size:15.5px;font-weight:600;margin:3px 0 3px}
+.fstep .d{font-size:12.5px;color:var(--ink2)}
+.fstep .ar{position:absolute;right:-8px;top:50%;transform:translateY(-50%);color:var(--canary);font-size:16px;z-index:2;background:var(--pan);padding:2px 0}
+@media(max-width:720px){.fstep .ar{display:none}}
+
+section{padding:34px 0 4px}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--canary2)}
+h2.sec{font-size:clamp(23px,4vw,31px);margin:.14em 0 .18em}
+.sub{color:var(--ink2);max-width:68ch;margin:0 0 18px}
+
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.tier{border:1px solid var(--line);border-radius:12px;background:var(--pan);box-shadow:var(--shadow);padding:15px 16px;position:relative;overflow:hidden}
+.tier:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--tc)}
+.tier .tg{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--tc);font-weight:600}
+.tier h3{font-size:17px;margin:3px 0 3px}
+.tier p{font-size:13.5px;color:var(--ink2);margin:0 0 6px}
+.tier code{font-family:var(--mono);font-size:12px;background:#fff;border:1px solid var(--line);border-radius:5px;padding:1px 5px;color:var(--ink)}
+
+.op{border:1px solid var(--line);border-radius:15px;background:var(--pan);box-shadow:var(--shadow);overflow:hidden}
+.op .otop{display:flex;align-items:center;gap:10px;padding:11px 16px;background:linear-gradient(180deg,#fff8,#fff0);border-bottom:1px solid var(--line2);font-family:var(--mono);font-size:12px;color:var(--ink2);flex-wrap:wrap}
+.op .otop b{color:var(--olive2)}
+.opgrid{display:grid;grid-template-columns:1.15fr .85fr;gap:0}
+.opcell{padding:16px 17px;border-right:1px solid var(--line2)}
+.opcell:last-child{border-right:0}
+.opcell h4{margin:0 0 9px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.field{width:100%;min-height:120px;font-family:var(--mono);font-size:13px;line-height:1.55;padding:11px 12px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);resize:vertical}
+.field:focus{outline:none;border-color:var(--olive)}
+.canrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:11px 0 6px}
+.canrow input{flex:1 1 180px;font-family:var(--mono);font-size:12.5px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+.canrow label{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.detected{margin-top:10px;font-family:var(--mono);font-size:12.5px;color:var(--ink2)}
+.chip{display:inline-block;background:var(--canary);color:#2a2412;border-radius:20px;padding:2px 10px;font-weight:700;margin:2px 3px 0;font-size:12px}
+.hl{background:#f4d98a;border-radius:3px;padding:0 1px;box-shadow:inset 0 -2px 0 var(--canary)}
+.mirror{margin-top:10px;font-family:var(--mono);font-size:12.5px;line-height:1.55;white-space:pre-wrap;word-break:break-word;background:#fbf8ee;border:1px dashed var(--line);border-radius:8px;padding:10px 11px;color:var(--ink2);max-height:150px;overflow:auto}
+.checks{margin:2px 0 0}
+.chk{display:flex;gap:9px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+.chk .b{font-family:var(--mono);font-weight:700;flex:none;width:1.4em}
+.chk.pass .b{color:var(--olive)} .chk.fail .b{color:var(--signal)}
+.chk .x{color:var(--ink2)}
+.chk code{font-family:var(--mono);font-size:12px;background:#fff;border:1px solid var(--line);border-radius:4px;padding:0 4px}
+.ledrow{display:flex;gap:8px;margin:12px 0 8px;flex-wrap:wrap}
+.ledrow input{flex:1 1 200px;font-family:var(--mono);font-size:12px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.btn{font-family:var(--mono);font-size:12px;border:1px solid var(--olive);background:color-mix(in srgb,var(--olive) 12%,#fff);color:var(--olive2);border-radius:8px;padding:8px 13px;cursor:pointer;font-weight:600;white-space:nowrap}
+.btn:hover{background:color-mix(in srgb,var(--olive) 22%,#fff)}
+.ledger{font-family:var(--mono);font-size:11.5px;background:#fbf8ee;border:1px solid var(--line);border-radius:9px;padding:8px;max-height:170px;overflow:auto}
+.ledger .le{padding:5px 6px;border-bottom:1px dashed var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ledger .le b{color:var(--canary2)}
+.ledger .le .fp{color:var(--dim)}
+.ledsay{font-family:var(--mono);font-size:11.5px;color:var(--ink2);margin-top:8px}
+.ledsay.dupe{color:var(--signal2)}
+.opnote{padding:11px 17px;font-family:var(--mono);font-size:11px;color:var(--dim);background:var(--pan2);line-height:1.6;border-top:1px solid var(--line2)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.card{border:1px solid var(--line);border-radius:12px;background:var(--pan);padding:16px 18px;box-shadow:var(--shadow)}
+.card h3{font-size:14px;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--olive2);margin:0 0 8px}
+.card.sig h3{color:var(--signal2)}
+.card p{margin:.35em 0;font-size:14.5px;color:var(--ink2)}
+.card ul{margin:.3em 0;padding-left:1.1em;font-size:13.8px;color:var(--ink2)}
+.card code{font-family:var(--mono);font-size:12.5px;background:#fff;border:1px solid var(--line);border-radius:4px;padding:0 4px}
+.src{font-family:var(--mono);font-size:11.5px;color:var(--dim);margin-top:14px;line-height:1.75}
+.backbar{margin:30px 0 0;padding:15px 0;border-top:1px solid var(--line);display:flex;gap:14px;flex-wrap:wrap;font-family:var(--mono);font-size:12.5px}
+.backbar a{text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:7px 12px;background:var(--pan)}
+.backbar a:hover{border-color:var(--olive)}
+footer{padding:26px 0 60px;text-align:center;font-family:var(--mono);font-size:12px;color:var(--dim)}
+@media(max-width:760px){.tiers,.opgrid,.two{grid-template-columns:1fr}.opcell{border-right:0;border-bottom:1px solid var(--line2)}}
+</style>
+
+<header class="top"><div class="wrap">
+  <div class="sealrow">
+    <svg class="seal" viewBox="0 0 120 120" role="img" aria-label="Forward Observers insignia">
+      <circle cx="60" cy="60" r="56" fill="none" stroke="#6f7d3f" stroke-width="2.4"/>
+      <circle cx="60" cy="60" r="34" fill="none" stroke="#6f7d3f" stroke-width="1" opacity=".7"/>
+      <line x1="60" y1="6" x2="60" y2="30" stroke="#6f7d3f" stroke-width="2"/>
+      <line x1="60" y1="90" x2="60" y2="114" stroke="#6f7d3f" stroke-width="2"/>
+      <line x1="6" y1="60" x2="30" y2="60" stroke="#6f7d3f" stroke-width="2"/>
+      <line x1="90" y1="60" x2="114" y2="60" stroke="#6f7d3f" stroke-width="2"/>
+      <circle cx="60" cy="60" r="9" fill="#c99128"/>
+      <circle cx="60" cy="60" r="9" fill="none" stroke="#8f3025" stroke-width="1.5"/>
+      <circle cx="60" cy="60" r="2.5" fill="#2a2412"/>
+      <g stroke="#c99128" stroke-width="1.2" opacity=".8">
+        <line x1="67" y1="53" x2="82" y2="38"/><line x1="53" y1="53" x2="38" y2="38"/>
+        <line x1="67" y1="67" x2="82" y2="82"/><line x1="53" y1="67" x2="38" y2="82"/>
+      </g>
+      <text x="60" y="106" text-anchor="middle" font-family="ui-monospace,monospace" font-size="7" fill="#54523f" letter-spacing="1">GIT · C2</text>
+    </svg>
+    <div>
+      <div class="kick">git-c2 · a canary control center</div>
+      <h1 class="mh">FORWARD OBSERVERS</h1>
+      <p class="lede">A control center that <b>lives on a git repo</b>. HQ posts orders in one file, forward observers sweep public indexes for your planted <b>canary tokens</b>, findings append to a git ledger, and a page reads it back — <b>a topographical map of where your markers surface online</b>. The repo is the comms fabric, not the compute.</p>
+    </div>
+  </div>
+
+  <div class="flow">
+    <div class="fstep"><div class="t">HQ</div><div class="n">orders.json</div><div class="d">canaries, observer assignments, cadence</div><span class="ar">→</span></div>
+    <div class="fstep"><div class="t">field</div><div class="n">observers sweep</div><div class="d">poll public indexes for each canary</div><span class="ar">→</span></div>
+    <div class="fstep"><div class="t">ledger</div><div class="n">hits.jsonl</div><div class="d">append-only, deduped, committed to git</div><span class="ar">→</span></div>
+    <div class="fstep"><div class="t">readout</div><div class="n">this page</div><div class="d">reads the ledger back, plots the map</div></div>
+  </div>
+</div></header>
+
+<main class="wrap">
+
+<section id="tiers">
+  <div class="eyebrow">The chain of command</div>
+  <h2 class="sec">Three tiers, one repo</h2>
+  <p class="sub">Everything is a plain file in the repo, so the whole system is auditable in a diff. Command flows down; findings flow up.</p>
+  <div class="tiers">
+    <div class="tier" style="--tc:var(--olive)">
+      <div class="tg">HQ · command</div>
+      <h3>The order surface</h3>
+      <p><code>orders.json</code> names the canaries to track, assigns observers to sources, and sets cadence. <code>.github/workflows/observer.yml</code> is the cron Action: self-test → sweep → commit the ledger.</p>
+    </div>
+    <div class="tier" style="--tc:var(--canary)">
+      <div class="tg">field · the trust boundary</div>
+      <h3>Pure detection</h3>
+      <p><code>fo_core.py</code> is <b>network-free</b>: <code>scan_text</code> finds a canary only where it stands alone (case-sensitive, not inside a larger token), and <code>record_hit</code> appends to the ledger with SHA-256 dedupe. A hit here is <b>ground truth</b>.</p>
+    </div>
+    <div class="tier" style="--tc:var(--signal)">
+      <div class="tg">observers · bases</div>
+      <h3>The reporters</h3>
+      <p><code>fo_github.py</code> polls GitHub code search per canary and records hits; <code>base_checkin.py</code> writes a heartbeat so HQ can see fleet status. Everything upstream of <code>fo_core</code> is a <b>lead</b>, not proof.</p>
+    </div>
+  </div>
+</section>
+
+<section id="selftest">
+  <div class="eyebrow">Verify first</div>
+  <h2 class="sec">The trust boundary, live</h2>
+  <p class="sub">Before trusting any hit, you verify the detector. This is <code>fo_core.py</code>’s logic ported faithfully to run in your browser — the same word-boundary rule, the same SHA-256 dedupe. Type into the field document; the detector reacts. Nothing leaves this page.</p>
+  <div class="op">
+    <div class="otop">◎ FO-CORE · <b>scan_text + record_hit</b>, ported verbatim — the real detection, running client-side (no network)</div>
+    <div class="opgrid">
+      <div class="opcell">
+        <h4>the field document</h4>
+        <textarea class="field" id="doc">readme
+... see build stoch-6x6 in the appendix, cf. STOICHEION-7Q9 for the register ...
+this line has prestoch-6x6x embedded in a larger token — should NOT match.</textarea>
+        <div class="canrow">
+          <label>canaries:</label>
+          <input id="cans" value="stoch-6x6, STOICHEION-7Q9">
+        </div>
+        <div class="detected" id="detected"></div>
+        <div class="mirror" id="mirror"></div>
+      </div>
+      <div class="opcell">
+        <h4>self-test · three assertions, no network</h4>
+        <div class="checks" id="checks"></div>
+        <h4 style="margin-top:16px">the ledger · append-only, deduped</h4>
+        <div class="ledrow">
+          <input id="url" value="https://github.com/acme/repo/blob/main/x.py" aria-label="url">
+          <button class="btn" id="rec">▸ record hit</button>
+        </div>
+        <div class="ledger" id="ledger"></div>
+        <div class="ledsay" id="ledsay">record a detected canary at a URL — a repeated (canary, url) is refused by fingerprint.</div>
+      </div>
+    </div>
+    <div class="opnote">The word-boundary rule uses a regex lookbehind, exactly as <span class="mono">fo_core.scan_text</span>: <span class="mono">(?&lt;![A-Za-z0-9_-]) canary (?![A-Za-z0-9_-])</span>. The fingerprint is the first 16 hex of <span class="mono">sha256(canary + NUL + url)</span>, computed here with the browser’s WebCrypto — the same bytes as the Python.</div>
+  </div>
+</section>
+
+<section id="scope">
+  <div class="eyebrow">The honest scope</div>
+  <h2 class="sec">Command vs. influence</h2>
+  <div class="two">
+    <div class="card">
+      <h3>What you command</h3>
+      <p>Your <b>bases and observers</b> are yours — full command. They run your code, on your cadence, and write to your ledger. The repo is the shared, tamper-evident record of the whole fleet.</p>
+      <p>The ledger is append-only and deduped; the Action commits it back, so the history <i>is</i> the audit trail.</p>
+    </div>
+    <div class="card sig">
+      <h3>What is only influence</h3>
+      <p>Public indexes are <b>not</b> yours. The ledger records <i>where your canary surfaced</i> in that outside territory — it grants no control over it.</p>
+      <p>And it sees only what a crawler <b>already indexed</b>: it maps <b>published</b> propagation, <i>not</i> a token swallowed into a training set and never re-emitted. Absence in the ledger is not absence in the world.</p>
+    </div>
+  </div>
+</section>
+
+<section id="honesty">
+  <div class="eyebrow">The colophon</div>
+  <h2 class="sec">What this catches — and what it does not</h2>
+  <div class="two">
+    <div class="card">
+      <h3>Sound</h3>
+      <ul>
+        <li>The <b>detector is real and verifiable</b>: <code>fo_core.py --selftest</code> proves detection + word-boundary + dedupe with no network. A ledger hit is ground truth.</li>
+        <li>The <b>git-as-ledger</b> pattern is a legit GitOps design: orders in one file, findings in an append-only ledger, a page reads it back — all auditable in a diff.</li>
+        <li>The code ships <b>verbatim</b>; the self-test above is that exact logic, running client-side.</li>
+      </ul>
+    </div>
+    <div class="card sig">
+      <h3>Limits (and it says so)</h3>
+      <ul>
+        <li><b>Index lookup ≠ ground truth.</b> GitHub code search is fuzzy; harden <code>fo_github.py</code> by fetching each candidate’s raw blob and re-running <code>scan_text</code> before recording (marked in-file).</li>
+        <li><b>Published-only.</b> It maps a canary where a crawler indexed it — not tokens ingested into training and never re-emitted.</li>
+        <li><b>Be a good neighbour.</b> A fleet of pollers can resemble abuse traffic — stay in ToS and rate limits, respect robots.txt, keep commits sane.</li>
+        <li><b>Published safely:</b> the Action’s hourly cron is <b>commented out</b> and the sweep is guarded, so this repo does not auto-poll — you activate it deliberately with a PAT.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="src">
+    SOURCE · the runnable kit — <a href="https://github.com/DavidWise01/forward-observers">github.com/DavidWise01/forward-observers</a> · <code>fo_core.py</code> (detector + ledger, self-testable) · <code>fo_github.py</code> · <code>base_checkin.py</code> · <code>orders.json</code> · <code>.github/workflows/observer.yml</code>. The canaries in the demo (<span class="mono">stoch-6x6</span>, <span class="mono">STOICHEION-7Q9</span>) are the kit’s own — ROOT0 markers for mapping where the STOICHEION corpus surfaces.
+  </div>
+  <div class="backbar">
+    <a href="https://github.com/DavidWise01/forward-observers">⧉ the code (GitHub)</a>
+    <a href="https://davidwise01.github.io/the-city/">⌗ the city · command center</a>
+    <a href="https://davidwise01.github.io/ud0/">⌂ ud0 · the atlas</a>
+    <a href="#selftest">↑ verify</a>
+  </div>
+</section>
+
+<footer>
+  FORWARD OBSERVERS · git-c2 · a canary control center on a git repo · David Lee Wise / ROOT0 / TriPod LLC · CC-BY-ND-4.0<br>
+  the repo is the comms fabric · the detector is the trust boundary · verify first, always
+</footer>
+</main>
+
+<script>
+(function(){
+"use strict";
+function esc(s){return String(s).replace(/[&<>]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c];});}
+function reEsc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");}
+function canRe(c,g){
+  try{ return new RegExp("(?<![A-Za-z0-9_-])"+reEsc(c)+"(?![A-Za-z0-9_-])", g?"g":""); }
+  catch(e){ return new RegExp("(^|[^A-Za-z0-9_-])"+reEsc(c)+"(?![A-Za-z0-9_-])", g?"g":""); }
+}
+function scanText(text, canaries){
+  var found=[];
+  canaries.forEach(function(c){ if(c && canRe(c,false).test(text)) found.push(c); });
+  return found;
+}
+function getCanaries(){
+  return document.getElementById("cans").value.split(",").map(function(s){return s.trim();}).filter(Boolean);
+}
+function highlight(text, canaries){
+  var html=esc(text);
+  canaries.slice().sort(function(a,b){return b.length-a.length;}).forEach(function(c){
+    if(!c) return;
+    var re=canRe(esc(c),true);
+    html=html.replace(re, function(m){return '<span class="hl">'+m+'</span>';});
+  });
+  return html;
+}
+function renderDetect(){
+  var doc=document.getElementById("doc").value, cans=getCanaries();
+  var found=scanText(doc, cans);
+  var d=document.getElementById("detected");
+  d.innerHTML = found.length
+    ? 'detected: '+found.map(function(c){return '<span class="chip">'+esc(c)+'</span>';}).join('')
+    : '<span style="color:var(--dim)">no canary stands alone in the document</span>';
+  document.getElementById("mirror").innerHTML = highlight(doc, cans);
+  window.__found=found; window.__doc=doc;
+}
+function runSelftest(){
+  var out=[];
+  var canaries=["stoch-6x6","STOICHEION-7Q9"];
+  var a1=JSON.stringify(scanText("readme\n... see build stoch-6x6 in the appendix ...\n",canaries))===JSON.stringify(["stoch-6x6"]);
+  out.push([a1,"detection","<code>stoch-6x6</code> is found standing alone in a document."]);
+  var a2=scanText("prestoch-6x6x",canaries).length===0;
+  out.push([a2,"boundary","<code>prestoch-6x6x</code> does <b>not</b> match — the token must stand alone."]);
+  fp("stoch-6x6","https://example.com/a").then(function(f){
+    var seen={}; var first=!(f in seen); seen[f]=1; var second=!(f in seen);
+    var a3 = first===true && second===false;
+    out.push([a3,"dedupe","the same <code>(canary, url)</code> is refused the second time by fingerprint."]);
+    paintChecks(out);
+  });
+  paintChecks(out);
+}
+function paintChecks(out){
+  document.getElementById("checks").innerHTML = out.map(function(o){
+    return '<div class="chk '+(o[0]?"pass":"fail")+'"><span class="b">'+(o[0]?"✓":"✗")+
+      '</span><span class="x"><b>'+o[1]+'</b> — '+o[2]+'</span></div>';
+  }).join('');
+}
+// fingerprint: sha256(canary + NUL + url)[:16], via WebCrypto — same bytes as fo_core.py
+async function fp(canary, url){
+  var data=new TextEncoder().encode(canary+String.fromCharCode(0)+url);
+  var buf=await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,"0");}).join("").slice(0,16);
+}
+var LED=[], SEEN={};
+function renderLedger(){
+  var el=document.getElementById("ledger");
+  el.innerHTML = LED.length ? LED.map(function(e){
+    return '<div class="le"><b>'+esc(e.canary)+'</b> @ '+esc(e.url)+' <span class="fp">· '+e.fp+'</span></div>';
+  }).join('') : '<div class="le" style="color:var(--dim)">ledger empty — record a detected canary</div>';
+}
+document.getElementById("rec").addEventListener("click", async function(){
+  var url=document.getElementById("url").value.trim();
+  var found=window.__found||[];
+  var say=document.getElementById("ledsay");
+  if(!url){ say.className="ledsay dupe"; say.textContent="a url is required to record."; return; }
+  if(!found.length){ say.className="ledsay dupe"; say.textContent="no canary detected in the document to record."; return; }
+  var wrote=0, dupes=0;
+  for(var i=0;i<found.length;i++){
+    var f=await fp(found[i], url);
+    if(f in SEEN){ dupes++; continue; }
+    SEEN[f]=1; LED.push({canary:found[i], url:url, fp:f});
+    wrote++;
+  }
+  renderLedger();
+  if(wrote && dupes){ say.className="ledsay dupe"; say.textContent="wrote "+wrote+" · refused "+dupes+" duplicate (already in the ledger)."; }
+  else if(wrote){ say.className="ledsay"; say.textContent="wrote "+wrote+" hit(s) to the ledger."; }
+  else { say.className="ledsay dupe"; say.textContent="refused — that (canary, url) is already burned into the ledger."; }
+});
+document.getElementById("doc").addEventListener("input", renderDetect);
+document.getElementById("cans").addEventListener("input", renderDetect);
+renderDetect(); runSelftest(); renderLedger();
+})();
+</script>
