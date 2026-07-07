@@ -233,7 +233,7 @@ this line has prestoch-6x6x embedded in a larger token — should NOT match.</te
       <h3>Limits (and it says so)</h3>
       <ul>
         <li><b>Index lookup ≠ ground truth.</b> GitHub code search is fuzzy; harden <code>fo_github.py</code> by fetching each candidate’s raw blob and re-running <code>scan_text</code> before recording (marked in-file).</li>
-        <li><b>Published-only.</b> It maps a canary where a crawler indexed it — not tokens ingested into training and never re-emitted.</li>
+        <li><b>Published-only.</b> It maps a canary where a crawler indexed it — not tokens ingested into training and never re-emitted. Its inverse, <a href="https://davidwise01.github.io/surfacing/">surfacing</a>, catches that other thing: a canary re-emitted from the weights.</li>
         <li><b>Be a good neighbour.</b> A fleet of pollers can resemble abuse traffic — stay in ToS and rate limits, respect robots.txt, keep commits sane.</li>
         <li><b>Published safely:</b> the Action’s hourly cron is <b>commented out</b> and the sweep is guarded, so this repo does not auto-poll — you activate it deliberately with a PAT.</li>
       </ul>
@@ -244,6 +244,7 @@ this line has prestoch-6x6x embedded in a larger token — should NOT match.</te
   </div>
   <div class="backbar">
     <a href="https://github.com/DavidWise01/forward-observers">⧉ the code (GitHub)</a>
+    <a href="https://davidwise01.github.io/surfacing/">▽ surfacing · the weights-side watcher</a>
     <a href="https://davidwise01.github.io/the-city/">⌗ the city · command center</a>
     <a href="https://davidwise01.github.io/ud0/">⌂ ud0 · the atlas</a>
     <a href="#selftest">↑ verify</a>
